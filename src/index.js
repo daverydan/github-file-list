@@ -5,18 +5,54 @@ import './index.css';
 
 const FileList = ({files}) => (
   <table className="file-list">
-    <tbody>
-      {files.map(file => (
-          <tr className="file-list-item" key={file.id}>
-            <td className="file-name">{file.name}</td>
-          </tr>
-        ))}
+    <tbody>{/* JavaScript goes between { } */}
+      { files.map( file => <FileListItem key={file.id} file={file} /> ) }
     </tbody>
   </table>
 );
-
 FileList.propTypes = {
   files: PropTypes.array
+};
+
+const FileListItem = ({file}) => (
+  <tr className="file-list-item">
+    {getFileName(file)}
+    <CommitMessage commit={file.latestCommit} />
+  </tr>
+);
+FileListItem.propTypes = {
+  file: PropTypes.object.isRequired
+};
+
+function getFileName(file) {
+  return [
+    <FileIcon file={file} key={0}/>,
+    <td className="file-name" key={1}>{file.name}</td>
+  ];
+}
+
+function FileIcon({ file }) {
+  let icon = 'fa-file-text-o';
+  if(file.type === 'folder') {
+    icon = 'fa-folder';
+  }
+  return (
+    <td className="file-icon">
+      <i className={`fa ${icon}`}/>
+    </td>
+  );
+}
+FileIcon.propTypes = {
+  file: PropTypes.object.isRequired
+};
+
+const CommitMessage = ({commit}) => (
+  <td className="commit-message">
+    {commit.message}
+  </td>
+);
+CommitMessage.propTypes = {
+  commit: PropTypes.object.isRequired
 };
 
 const testFiles = [
